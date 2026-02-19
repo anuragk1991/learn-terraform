@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
@@ -21,5 +20,4 @@ jobs:
 
       - name: Run PHP syntax check
         run: |
-          echo "Running php -l on all PHP files..."
           find . -name "*.php" -print0 | xargs -0 -n1 php -l
