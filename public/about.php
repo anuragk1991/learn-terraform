@@ -1,5 +1,5 @@
 <?php
-echo testrand();
+echo testrand(;
 
 ?><!doctype html>
 <html lang="en">
