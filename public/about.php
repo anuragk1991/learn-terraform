@@ -1,6 +1,4 @@
 <?php
-echo testrand(;
-
 ?><!doctype html>
 <html lang="en">
 <head>
