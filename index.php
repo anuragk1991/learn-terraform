@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>About Us - Demo App</title>
+    <title>Home - Demo App1</title>
 </head>
 <body>
     <nav>
@@ -11,7 +11,7 @@
         <a href="/about.php">About Us</a>
     </nav>
     <hr>
-    <h1>About Us</h1>
-    <p>We are learning how to do proper CI/CD with PHP + AWS.Again</p>
+    <h1>Homepage</h1>
+    <p>This is a simple PHP demo app used for CI/CD + Terraform training.</p>
 </body>
 </html>
