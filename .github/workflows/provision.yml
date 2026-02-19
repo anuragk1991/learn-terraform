@@ -1,0 +1,38 @@
+name: Manual Provisioning
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to provision"
+        required: true
+        default: "prod"
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (optional)
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Run provisioning via SSM
+        run: |
+          aws ssm send-command \
+            --targets "Key=tag:Role,Values=demo-php-web" \
+            --document-name "AWS-RunShellScript" \
+            --parameters commands='[
+              "cd /opt/demo-app",
+              "git pull",
+              "sudo bash provision/app_setup.sh"
+            ]' \
+            --comment "Manual provisioning from GitHub Actions"
+
+          echo "Provisioning command sent to all EC2 instances with Role=demo-php-web"

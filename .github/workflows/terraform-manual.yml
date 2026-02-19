@@ -1,0 +1,52 @@
+name: Manual Terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action (plan/apply/destroy)"
+        required: true
+        default: "plan"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_WORKING_DIR: infra/terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init -input=false
+
+      - name: Terraform Command
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          case "${{ github.event.inputs.action }}" in
+            plan)
+              terraform plan -input=false -var="my_ip_cidr=YOUR_IP/32"
+              ;;
+            apply)
+              terraform apply -input=false -auto-approve -var="my_ip_cidr=YOUR_IP/32"
+              ;;
+            destroy)
+              terraform destroy -input=false -auto-approve -var="my_ip_cidr=YOUR_IP/32"
+              ;;
+            *)
+              echo "Invalid action. Use: plan / apply / destroy"
+              exit 1
+              ;;
+          esac
